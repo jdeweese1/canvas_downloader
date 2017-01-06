@@ -156,8 +156,8 @@ class CanvasAPI():
         return self._GET(self.base_url + '/courses/' + str(course_id) + '/files')
 
 
-def main(config_file):
-    config = Config(config_file)
+def main(args):
+    config = Config(args.config)
     try:
         config.last_updated
     except:
@@ -237,4 +237,4 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--config', type=str, required=True,
                         help='Path to the config file')
     args = parser.parse_args()
-    main(config_file=args.config)
+    main(args)
