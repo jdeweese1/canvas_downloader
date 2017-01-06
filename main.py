@@ -1,8 +1,10 @@
 from ruamel import yaml
+import argparse
 import os
 import requests
 import dateutil.parser
 import datetime
+import argparse
 
 
 def pathify(string):
@@ -154,8 +156,8 @@ class CanvasAPI():
         return self._GET(self.base_url + '/courses/' + str(course_id) + '/files')
 
 
-def main():
-    config = Config('config.yaml')
+def main(config_file):
+    config = Config(config_file)
     try:
         config.last_updated
     except:
@@ -231,4 +233,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--config', type=str, required=True,
+                        help='Path to the config file')
+    args = parser.parse_args()
+    main(config_file=args.config)
