@@ -13,3 +13,6 @@ directory: <directory to download to>
 The oauth token can be generated from your account under `Settings`
 
 To specify the config file, use the `--config` flag
+
+I have an alias set up as the following:
+`alias canvas="python3 $HOME/projects/canvas_downloader/main.py --config $HOME/projects/canvas_downloader/config.yaml"`
