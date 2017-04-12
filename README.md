@@ -1,4 +1,4 @@
-##Canvas Downloader
+## Canvas Downloader
 
 Requires a yaml-formatted config file.
 
