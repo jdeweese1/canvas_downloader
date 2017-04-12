@@ -1,11 +1,9 @@
 from ruamel import yaml
-import argparse
 import os
 import requests
 import dateutil.parser
 import datetime
 import argparse
-
 
 def pathify(string):
     return string.replace(' ', '_').replace('/', '+')
@@ -116,6 +114,11 @@ class Course:
     def id(self):
         return self.raw_data['id']
 
+    def is_restricted(self):
+        return 'access_restricted_by_date' in self.raw_data and self.raw_data['access_restricted_by_date']
+
+
+
 
 class CanvasAPI():
     def __init__(self, oauth_token, url):
@@ -166,11 +169,11 @@ def main(args):
 
     api = CanvasAPI(config.token, config.url)
 
-    courses = [Course(x) for x in api.get_courses()]
+    courses = list(filter(lambda y: not y.is_restricted(), [Course(x) for x in api.get_courses()]))
 
     terms = set()
-    for iclass in courses:
-        terms.add(iclass.term)
+    for course in courses:
+        terms.add(course.term)
 
     # Make class directories
     for term in terms:
@@ -207,7 +210,7 @@ def main(args):
             last_updated = dateutil.parser.parse(config.last_updated)
             if modified_at > last_updated:
                 print("Downloading", file['filename'])
-                r = requests.get(file['url'], stream=True)
+                r = requests.get(file['url'], stream=True, timeout=30)
                 with open(folder_dir + '/' + pathify(file['filename']), 'wb') as opened_file:
                     for chunk in r.iter_content(chunk_size=1024):
                         if chunk:
@@ -223,6 +226,7 @@ def main(args):
             return
 
     for course in filter(lambda x: x.term == config.term, courses):
+        print(course.name)
         course.folders = api.get_folders(course.id)
         course.files = api.get_files(course.id)
         root_folder = list(filter(lambda x: x['parent_folder_id'] == None, course.folders))[0]
