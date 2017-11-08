@@ -1,5 +1,9 @@
-## Canvas Downloader
+# Canvas Downloader
 
+A simple script that downloads and organizes all posted files from Canvas (University of Michigan's class organization hub). Each time it is run, it downloads only the files that have changed from the last run. 
+
+
+## Usage
 Requires a yaml-formatted config file.
 
 Config file should be formatted like the following:
